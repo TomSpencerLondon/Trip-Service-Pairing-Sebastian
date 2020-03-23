@@ -3,6 +3,7 @@ package org.craftedsw.tripservicekata.trip;
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,14 +21,20 @@ public class TripServiceTest {
 
   private TripService tripService;
   private User loggedInUser;
-  @Mock
-  User userToCheck;
+
+  @Mock User userToCheck;
+  @Mock User ANY_USER;
+
+  @BeforeEach
+  void setUp() {
+    loggedInUser = ANY_USER;
+    tripService = new TestableTripService();
+  }
 
   @Test
   void should_throw_an_exception_when_user_is_not_logged_in() {
-
-    tripService = new TestableTripService();
     loggedInUser = null;
+
     assertThrows(UserNotLoggedInException.class, () -> {
       tripService.getTripsByUser(null);
     });
@@ -35,18 +42,14 @@ public class TripServiceTest {
 
   @Test
   void return_an_empty_tripList_for_user_with_no_friends() {
-
-    tripService = new TestableTripService();
-    loggedInUser = new User();
     ArrayList<Trip> tripList = new ArrayList<Trip>();
+
     assertEquals(tripList, tripService.getTripsByUser(new User()));
   }
 
   @Test
   void return_empty_list_if_user_has_friend_not_logged_in_user() {
-
-    tripService = new TestableTripService();
-    loggedInUser = new User();
+    loggedInUser = ANY_USER;
     List<User> userList = Arrays.asList(new User());
     when(userToCheck.getFriends()).thenReturn(userList);
 
@@ -56,8 +59,7 @@ public class TripServiceTest {
 
   @Test
   void return_empty_trip_list_if_friend_but_no_trip() {
-    tripService = new TestableTripService();
-    loggedInUser = new User();
+    loggedInUser = ANY_USER;
     List<User> userList = Arrays.asList(loggedInUser);
     when(userToCheck.getFriends()).thenReturn(userList);
     ArrayList<Trip> tripList = new ArrayList<Trip>();
@@ -69,8 +71,7 @@ public class TripServiceTest {
 
   @Test
   void returns_trips_for_friend_of_logged_in_user() {
-    tripService = new TestableTripService();
-    loggedInUser = new User();
+    loggedInUser = ANY_USER;
     List<User> userList = Arrays.asList(loggedInUser);
     when(userToCheck.getFriends()).thenReturn(userList);
     List<Trip> tripList = List.of(new Trip());
