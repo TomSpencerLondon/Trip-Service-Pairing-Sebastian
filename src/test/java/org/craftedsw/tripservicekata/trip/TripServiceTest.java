@@ -8,13 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +25,6 @@ public class TripServiceTest {
   @Mock User ANY_USER;
   @Mock TripDAO tripDAO;
 
-  private List<User> friendList;
   private List<Trip> tripList;
 
   @BeforeEach
@@ -52,8 +49,6 @@ public class TripServiceTest {
 
   @Test
   void return_empty_list_if_user_has_friend_not_logged_in_user() {
-    User friend = mock(User.class);
-    friendList = Arrays.asList(friend);
     when(userToCheck.isFriendsWith(loggedInUser)).thenReturn(false);
     tripList = Collections.emptyList();
 
@@ -62,7 +57,6 @@ public class TripServiceTest {
 
   @Test
   void return_empty_trip_list_if_friend_but_no_trip() {
-    friendList = Arrays.asList(loggedInUser);
     when(userToCheck.isFriendsWith(loggedInUser)).thenReturn(true);
     tripList = Collections.emptyList();
     when(tripDAO.instanceFindTripsByUser(userToCheck)).thenReturn(tripList);
@@ -72,7 +66,6 @@ public class TripServiceTest {
 
   @Test
   void returns_trips_for_friend_of_logged_in_user() {
-    friendList = Arrays.asList(loggedInUser);
     when(userToCheck.isFriendsWith(loggedInUser)).thenReturn(true);
     tripList = List.of(new Trip());
     when(tripDAO.instanceFindTripsByUser(userToCheck)).thenReturn(tripList);
