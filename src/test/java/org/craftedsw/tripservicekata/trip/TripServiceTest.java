@@ -11,9 +11,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +26,8 @@ public class TripServiceTest {
 
   @Mock User userToCheck;
   @Mock User ANY_USER;
+  private List<User> friendList;
+  private List<Trip> tripList;
 
   @BeforeEach
   void setUp() {
@@ -42,28 +46,26 @@ public class TripServiceTest {
 
   @Test
   void return_an_empty_tripList_for_user_with_no_friends() {
-    ArrayList<Trip> tripList = new ArrayList<Trip>();
+    tripList = Collections.emptyList();
 
     assertEquals(tripList, tripService.getTripsByUser(new User()));
   }
 
   @Test
   void return_empty_list_if_user_has_friend_not_logged_in_user() {
-    loggedInUser = ANY_USER;
-    List<User> userList = Arrays.asList(new User());
-    when(userToCheck.getFriends()).thenReturn(userList);
+    User friend = mock(User.class);
+    friendList = Arrays.asList(friend);
+    when(userToCheck.getFriends()).thenReturn(friendList);
+    tripList = Collections.emptyList();
 
-    ArrayList<Trip> tripList = new ArrayList<Trip>();
     assertEquals(tripList, tripService.getTripsByUser(userToCheck));
   }
 
   @Test
   void return_empty_trip_list_if_friend_but_no_trip() {
-    loggedInUser = ANY_USER;
-    List<User> userList = Arrays.asList(loggedInUser);
-    when(userToCheck.getFriends()).thenReturn(userList);
-    ArrayList<Trip> tripList = new ArrayList<Trip>();
-
+    friendList = Arrays.asList(loggedInUser);
+    when(userToCheck.getFriends()).thenReturn(friendList);
+    tripList = Collections.emptyList();
     when(userToCheck.trips()).thenReturn(tripList);
 
     assertEquals(tripList, tripService.getTripsByUser(userToCheck));
@@ -71,11 +73,9 @@ public class TripServiceTest {
 
   @Test
   void returns_trips_for_friend_of_logged_in_user() {
-    loggedInUser = ANY_USER;
-    List<User> userList = Arrays.asList(loggedInUser);
-    when(userToCheck.getFriends()).thenReturn(userList);
-    List<Trip> tripList = List.of(new Trip());
-
+    friendList = Arrays.asList(loggedInUser);
+    when(userToCheck.getFriends()).thenReturn(friendList);
+    tripList = List.of(new Trip());
     when(userToCheck.trips()).thenReturn(tripList);
 
     assertEquals(tripList, tripService.getTripsByUser(userToCheck));
