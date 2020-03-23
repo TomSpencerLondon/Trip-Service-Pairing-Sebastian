@@ -4,7 +4,19 @@
 	<groupId>org.craftedsw</groupId>
 	<artifactId>trip-service-kata</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>trip-service-kata</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <name>trip-service-kata</name>
 
    <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
