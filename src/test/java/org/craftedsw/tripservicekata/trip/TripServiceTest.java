@@ -56,12 +56,24 @@ public class TripServiceTest {
 
   @Test
   void return_empty_trip_list_if_friend_but_no_trip() {
-
     tripService = new TestableTripService();
     loggedInUser = new User();
     List<User> userList = Arrays.asList(loggedInUser);
     when(userToCheck.getFriends()).thenReturn(userList);
     ArrayList<Trip> tripList = new ArrayList<Trip>();
+
+    when(userToCheck.trips()).thenReturn(tripList);
+
+    assertEquals(tripList, tripService.getTripsByUser(userToCheck));
+  }
+
+  @Test
+  void returns_trips_for_friend_of_logged_in_user() {
+    tripService = new TestableTripService();
+    loggedInUser = new User();
+    List<User> userList = Arrays.asList(loggedInUser);
+    when(userToCheck.getFriends()).thenReturn(userList);
+    List<Trip> tripList = List.of(new Trip());
 
     when(userToCheck.trips()).thenReturn(tripList);
 
