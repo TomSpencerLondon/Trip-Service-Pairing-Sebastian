@@ -12,12 +12,14 @@ public class TripService {
     public List<Trip> getTripsByUser(User user) throws UserNotLoggedInException {
 		User loggedUser = validateLoggedIn();
 
-        if (user.getFriends().contains(loggedUser)) {
-			return getTrips(user);
-		}
-
-        return Collections.emptyList();
+        return areFriends(user, loggedUser) ?
+				getTrips(user) :
+				Collections.emptyList();
     }
+
+	private boolean areFriends(User user, User loggedUser) {
+		return user.getFriends().contains(loggedUser);
+	}
 
 	private User validateLoggedIn() {
 		User loggedUser = getLoggedInUser();
